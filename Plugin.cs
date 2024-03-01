@@ -59,7 +59,17 @@ namespace YT_Assistant
             {
                 SwitchReady = false;
 
+                GorillaComputer.instance.roomToJoin = "";
                 PhotonNetwork.Disconnect();
+
+                SwitchReady = true;
+            }
+            if (ControllerInputPoller.instance.rightControllerPrimaryButton && ControllerInputPoller.instance.rightControllerSecondaryButton && ControllerInputPoller.instance.leftControllerPrimaryButton && ControllerInputPoller.instance.leftControllerSecondaryButton && SwitchReady)
+            {
+                SwitchReady = false;
+
+                GorillaComputer.instance.roomToJoin = "";
+                Application.Quit();
 
                 SwitchReady = true;
             }
