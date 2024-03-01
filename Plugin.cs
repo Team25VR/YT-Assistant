@@ -39,8 +39,9 @@ namespace YT_Assistant
 
             if (ControllerInputPoller.instance.rightControllerPrimaryButton && SwitchReady)
             {
-                GorillaComputer.instance.roomToJoin = "MONKE" + UnityEngine.Random.Range(1000, 10000).ToString();
-                CodeStaller();
+                SwitchReady = false;
+
+                GorillaComputer.instance.roomToJoin = "MONKE" + UnityEngine.Random.Range(100, 1000).ToString();
 
                 SwitchReady = true;
             }
@@ -48,16 +49,18 @@ namespace YT_Assistant
             {
                 SwitchReady = false;
 
-                PhotonNetwork.Disconnect();
-                CodeStaller();
+                GorillaComputer.instance.roomToJoin = "GORILLA" + UnityEngine.Random.Range(100, 1000).ToString();
 
                 SwitchReady = true;
             }
-        }
+            if (ControllerInputPoller.instance.rightControllerPrimaryButton && ControllerInputPoller.instance.rightControllerSecondaryButton && SwitchReady)
+            {
+                SwitchReady = false;
 
-        public static IEnumerator CodeStaller()
-        {
-            yield return new WaitForSeconds(0.2f);
+                PhotonNetwork.Disconnect();
+
+                SwitchReady = true;
+            }
         }
     }
 }
