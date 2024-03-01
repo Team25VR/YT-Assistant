@@ -41,6 +41,7 @@ namespace YT_Assistant
             {
                 SwitchReady = false;
 
+                GorillaComputer.instance.roomToJoin = "";
                 GorillaComputer.instance.roomToJoin = "MONKE" + UnityEngine.Random.Range(100, 1000).ToString();
 
                 SwitchReady = true;
@@ -49,6 +50,7 @@ namespace YT_Assistant
             {
                 SwitchReady = false;
 
+                GorillaComputer.instance.roomToJoin = "";
                 GorillaComputer.instance.roomToJoin = "GORILLA" + UnityEngine.Random.Range(100, 1000).ToString();
 
                 SwitchReady = true;
