@@ -20,7 +20,7 @@ namespace YT_Assistant
     {
         public const string GUID = "dev.team25vr.yt_assistant";
         public const string Name = "YT Assistant";
-        public const string Version = "1.4.0";
+        public const string Version = "1.6.0";
 
         public void Awake()
         {
@@ -33,36 +33,54 @@ namespace YT_Assistant
     [HarmonyPatch("FixedUpdate", MethodType.Normal)]
     public class PluginMain : MonoBehaviour
     {
-        private static bool SwitchReady = true;
-        private static int GenerateAmount = 1;
+        public static bool Ready = true;
 
         public static void Prefix()
         {
-            if (ControllerInputPoller.instance.rightControllerPrimaryButton && SwitchReady)
+            if (ControllerInputPoller.instance.rightControllerPrimaryButton && Ready)
             {
-                SwitchReady = false;
+                Ready = false;
 
-                if (GenerateAmount == 0)
-                {
-                    GenerateAmount = 1;
-                }
-                if (GenerateAmount > 5)
-                {
-                    GenerateAmount = 5;
-                }
+                GorillaComputer.instance.currentName = "";
+                GorillaComputer.instance.currentName = HashString(DateTime.Now.Ticks.ToString()).ToUpper();
+
+                Ready = true;
+            }
+
+            if (ControllerInputPoller.instance.rightControllerSecondaryButton && Ready)
+            {
+                Ready = false;
 
                 GorillaComputer.instance.roomToJoin = "";
                 GorillaComputer.instance.roomToJoin = HashString(DateTime.Now.Ticks.ToString()).ToUpper();
 
-                GenerateAmount = 0;
+                Ready = true;
             }
-            if (ControllerInputPoller.instance.rightControllerSecondaryButton && SwitchReady)
-            {
-                SwitchReady = false;
 
-                GenerateAmount += 1;
+            if (GorillaComputer.instance.currentGameMode.ToString().Contains("MODDED"))
+            {
+                if (ControllerInputPoller.instance.rightControllerPrimaryButton && ControllerInputPoller.instance.rightControllerSecondaryButton && Ready)
+                {
+                    Ready = false;
+
+                    GorillaComputer.instance.currentName = "";
+                    GorillaComputer.instance.roomToJoin = "";
+                    PhotonNetwork.Disconnect();
+
+                    Ready = true;
+                }
+
+                if (ControllerInputPoller.instance.leftControllerPrimaryButton && ControllerInputPoller.instance.leftControllerSecondaryButton && ControllerInputPoller.instance.rightControllerPrimaryButton && ControllerInputPoller.instance.rightControllerSecondaryButton && Ready)
+                {
+                    Ready = false;
+
+                    GorillaComputer.instance.currentName = "";
+                    GorillaComputer.instance.roomToJoin = "";
+                    Application.Quit();
+
+                    Ready = true;
+                }
             }
-            SwitchReady = true;
         }
 
         public static string HashString(string source)
@@ -74,13 +92,12 @@ namespace YT_Assistant
             data = x.ComputeHash(data);
             string ret = "";
 
-            for (int i = 0; i < GenerateAmount; i++)
+            for (int i = 0; i < UnityEngine.Random.Range(2, 4); i++)
             {
                 ret += data[i].ToString("x2").ToLower();
             }
 
             return ret;
         }
-
     }
 }
