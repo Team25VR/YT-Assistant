@@ -63,8 +63,6 @@ namespace YT_Assistant
                 {
                     Ready = false;
 
-                    GorillaComputer.instance.currentName = "";
-                    GorillaComputer.instance.roomToJoin = "";
                     PhotonNetwork.Disconnect();
 
                     Ready = true;
@@ -74,8 +72,6 @@ namespace YT_Assistant
                 {
                     Ready = false;
 
-                    GorillaComputer.instance.currentName = "";
-                    GorillaComputer.instance.roomToJoin = "";
                     Application.Quit();
 
                     Ready = true;
