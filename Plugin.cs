@@ -52,7 +52,9 @@ namespace YT_Assistant
                 }
 
                 GorillaComputer.instance.roomToJoin = "";
-                GorillaComputer.instance.roomToJoin = HashString(DateTime.Now.Ticks.ToString());
+                GorillaComputer.instance.roomToJoin = HashString(DateTime.Now.Ticks.ToString()).ToUpper();
+
+                GenerateAmount = 0;
             }
             if (ControllerInputPoller.instance.rightControllerSecondaryButton && SwitchReady)
             {
