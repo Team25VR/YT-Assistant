@@ -20,7 +20,7 @@ namespace YT_Assistant
     {
         public const string GUID = "dev.team25vr.yt_assistant";
         public const string Name = "YT Assistant";
-        public const string Version = "1.0.0";
+        public const string Version = "1.4.0";
 
         public void Awake()
         {
@@ -31,48 +31,54 @@ namespace YT_Assistant
 
     [HarmonyPatch(typeof(GorillaLocomotion.Player))]
     [HarmonyPatch("FixedUpdate", MethodType.Normal)]
-    public class PluginMain
+    public class PluginMain : MonoBehaviour
     {
-        static void Prefix(GorillaLocomotion.Player __instance)
-        {
-            bool SwitchReady = true;
+        private static bool SwitchReady = true;
+        private static int GenerateAmount = 1;
 
+        public static void Prefix()
+        {
             if (ControllerInputPoller.instance.rightControllerPrimaryButton && SwitchReady)
             {
                 SwitchReady = false;
 
-                GorillaComputer.instance.roomToJoin = "";
-                GorillaComputer.instance.roomToJoin = "MONKE" + UnityEngine.Random.Range(100, 1000).ToString();
+                if (GenerateAmount == 0)
+                {
+                    GenerateAmount = 1;
+                }
+                if (GenerateAmount > 5)
+                {
+                    GenerateAmount = 5;
+                }
 
-                SwitchReady = true;
+                GorillaComputer.instance.roomToJoin = "";
+                HashString(GorillaComputer.instance.roomToJoin);
             }
             if (ControllerInputPoller.instance.rightControllerSecondaryButton && SwitchReady)
             {
                 SwitchReady = false;
 
-                GorillaComputer.instance.roomToJoin = "";
-                GorillaComputer.instance.roomToJoin = "GORILLA" + UnityEngine.Random.Range(100, 1000).ToString();
-
-                SwitchReady = true;
+                GenerateAmount += 1;
             }
-            if (ControllerInputPoller.instance.rightControllerPrimaryButton && ControllerInputPoller.instance.rightControllerSecondaryButton && SwitchReady)
-            {
-                SwitchReady = false;
-
-                GorillaComputer.instance.roomToJoin = "";
-                PhotonNetwork.Disconnect();
-
-                SwitchReady = true;
-            }
-            if (ControllerInputPoller.instance.rightControllerPrimaryButton && ControllerInputPoller.instance.rightControllerSecondaryButton && ControllerInputPoller.instance.leftControllerPrimaryButton && ControllerInputPoller.instance.leftControllerSecondaryButton && SwitchReady)
-            {
-                SwitchReady = false;
-
-                GorillaComputer.instance.roomToJoin = "";
-                Application.Quit();
-
-                SwitchReady = true;
-            }
+            SwitchReady = true;
         }
+
+        public static string HashString(string source)
+        {
+            System.Security.Cryptography.MD5CryptoServiceProvider x = new
+            System.Security.Cryptography.MD5CryptoServiceProvider();
+
+            byte[] data = System.Text.Encoding.ASCII.GetBytes(source);
+            data = x.ComputeHash(data);
+            string ret = "";
+
+            for (int i = 0; i < GenerateAmount; i++)
+            {
+                ret += data[i].ToString("x2").ToLower();
+            }
+
+            return ret;
+        }
+
     }
 }
